@@ -6,6 +6,6 @@ CREATE TABLE logs (
     description TEXT NOT NULL,
     image TEXT,
     rating INTEGER NOT NULL,
-    visitedDay TIMESTAMP,
+    visited_day TIMESTAMP NOT NULL,
     date_created TIMESTAMP DEFAULT now() NOT NULL
 );

@@ -19,8 +19,8 @@ logsRouter
   })
 
   .post(jsonParser, (req, res, next) => {
-    const {latitude, longitude, title, description, image, rating } = req.body
-    const newLog = { latitude, longitude, title, description, image, rating }
+    const {latitude, longitude, title, description, image, rating, visited_day } = req.body
+    const newLog = { latitude, longitude, title, description, image, rating, visited_day }
     for (const [key, value] of Object.entries(newLog))
       if (value == null)
         return res.status(400).json({
@@ -35,6 +35,32 @@ logsRouter
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${log.id}`))
           .json(log)
+      })
+      .catch(next)
+  })
+
+logsRouter
+  .route('/:log_id')
+  .get((req, res, next) => {
+    const knexInstance = req.app.get('db')
+    logsService.getById(knexInstance, req.params.log_id)
+      .then(log => {
+        if (!log) {
+          return res.status(404).json({
+            error: { message: `Log doesn't exist` }
+          })
+        }
+        res.json(log)
+      })
+      .catch(next)
+  })
+  .delete((req, res, next) => {
+    logsService.deleteLog(
+      req.app.get('db'),
+      req.params.log_id
+    )
+      .then(numRowsAffected => {
+        res.status(204).end()
       })
       .catch(next)
   })

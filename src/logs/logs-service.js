@@ -17,6 +17,16 @@ const logsService = {
       .then(([log]) => log)
       .then(log => logsService.getById(knex, log.id))
   },
+  deleteLog(knex, id) {
+    return knex('logs')
+      .where({ id })
+      .delete()
+  },
+  updateLog(knex, id, newLogFields) {
+    return knex('logs')
+      .where({ id })
+      .update(newLogFields)
+  }
 }
 
 module.exports = logsService
