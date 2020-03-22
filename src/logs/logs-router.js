@@ -19,9 +19,10 @@ logsRouter
   })
 
   .post(jsonParser, (req, res, next) => {
-    const {latitude, longitude, title, description, image, rating, visited_day } = req.body
-    const newLog = { latitude, longitude, title, description, image, rating, visited_day }
-    for (const [key, value] of Object.entries(newLog))
+    const {latitude, longitude, title, description, image, public, rating, visited_day } = req.body
+    const newLog = { latitude, longitude, title, description, public, image, rating, visited_day }
+    const checkReqKey = { latitude, longitude, title, description, public, rating, visited_day }
+    for (const [key, value] of Object.entries(checkReqKey))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
