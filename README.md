@@ -1,26 +1,87 @@
-# Express Boilerplate!
+# My Travels App
 
-This is a boilerplate project used for starting new projects!
+Live: https://hanguyen-mytravels.now.sh/
 
-## How do set up?
+This is a Travel Logs App that help users to saved all the travel logs they created. And also alow them to view other people travel logs. Users can see all the logs in form of Map View or List View.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+### API Documentation: 
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-## Scripts
+- ##### GET /api/logs
 
-Start the application `npm start`
+    Return all logs created
 
-Start nodemon for the application `npm run dev`
+###### Example response
 
-Run the tests in watch mode `npm test`
+    [
+        {
+            id: 1,
+            latitude: '42.3554',
+            longitude: '-71.0640',
+            title: 'Boston Common',
+            description: 'This is a beautiful place',
+            image: 'https://en.wikipedia.org/wiki/File:Aerial_View_Parkman_Bandstand_at_Boston_Common.jpg',
+            rating: 10,
+            visited_day: '2020-03-18T07:55:12.825Z',
+            public: false,
+            date_created: '2020-03-18T07:55:12.825Z',
+        },
+        {
+            id: 2,
+            latitude: '48.8584',
+            longitude: '2.2945',
+            title: 'Eiffel Tower',
+            description: 'The tower is so tall',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg',
+            rating: 10,
+            visited_day: '2020-03-18T07:55:12.825Z',
+            public: true,
+            date_created: '2020-03-18T07:55:12.825Z'
+        },
+    ]
 
-## Deploying
 
-When your new project is ready for deployment, add a new heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+- ##### GET /api/logs/${logId}
+
+    Return a log with a specific id
+
+- ##### POST /api/logs
+   
+    Post a log
+
+###### Example request
+
+    {
+        latitude: '48.8584',
+        longitude: '2.2945',
+        title: 'Eiffel Tower',
+        description: 'The tower is so tall',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg',
+        rating: 10,
+        visited_day: '2020-03-18T07:55:12.825Z',
+        public: true,
+    }
+
+
+- ##### DELETE /api/logs/${logId}
+
+    Delete a Log. If no log could be found by logId , the server responds with a status 400.
+
+
+### Preview:
+
+Landing Page
+![](mytravels-preview.png)
+
+Map View Page
+![](mytravels-mapview.png)
+
+List View Page
+![](mytravels-listview.png)
+
+
+### Tech Stack
+
+    Front-end: HTML, CSS, Javascript, React
+
+    Back-end: Node.js, Express, PostgresSQL
