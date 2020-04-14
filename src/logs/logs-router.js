@@ -2,6 +2,7 @@ const express = require('express')
 const logsService = require('./logs-service')
 const path = require('path')
 const jsonParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
 
 
 const logsRouter = express.Router()
@@ -18,10 +19,10 @@ logsRouter
       .catch(next)
   })
 
-  .post(jsonParser, (req, res, next) => {
-    const {latitude, longitude, title, description, image, public, rating, visited_day } = req.body
-    const newLog = { latitude, longitude, title, description, public, image, rating, visited_day }
-    const checkReqKey = { latitude, longitude, title, description, public, rating, visited_day }
+  .post(requireAuth, jsonParser, (req, res, next) => {
+    const {user_id, latitude, longitude, title, description, image, public, rating, visited_day } = req.body
+    const newLog = {user_id, latitude, longitude, title, description, public, image, rating, visited_day }
+    const checkReqKey = {user_id, latitude, longitude, title, description, public, rating, visited_day }
     for (const [key, value] of Object.entries(checkReqKey))
       if (value == null)
         return res.status(400).json({
@@ -42,6 +43,7 @@ logsRouter
 
 logsRouter
   .route('/:log_id')
+  .all(requireAuth)
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     logsService.getById(knexInstance, req.params.log_id)
