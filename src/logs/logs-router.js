@@ -20,14 +20,17 @@ logsRouter
   })
 
   .post(requireAuth, jsonParser, (req, res, next) => {
-    const {user_id, latitude, longitude, title, description, image, public, rating, visited_day } = req.body
-    const newLog = {user_id, latitude, longitude, title, description, public, image, rating, visited_day }
-    const checkReqKey = {user_id, latitude, longitude, title, description, public, rating, visited_day }
+    const {latitude, longitude, title, description, image, public, rating, visited_day } = req.body
+    const newLog = {latitude, longitude, title, description, public, image, rating, visited_day }
+    const checkReqKey = {latitude, longitude, title, description, public, rating, visited_day }
     for (const [key, value] of Object.entries(checkReqKey))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
+
+    newLog.user_id = req.user.id
+
     logsService.insertLog(
       req.app.get('db'),
       newLog
@@ -37,6 +40,31 @@ logsRouter
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${log.id}`))
           .json(log)
+      })
+      .catch(next)
+  })
+
+logsRouter
+  .route('/publiclogs')
+  .get((req, res, next) => {
+    logsService.getPublicLogs(
+      req.app.get('db')
+    )
+      .then(logs => {
+        res.json(logs)
+      })
+      .catch(next)
+  })
+
+logsRouter
+  .route('/userlogs')
+  .all(requireAuth)
+  .get((req, res, next) => {
+    logsService.getLogsForUser(
+      req.app.get('db'), req.user.id
+    )
+      .then(logs => {
+        res.json(logs)
       })
       .catch(next)
   })
